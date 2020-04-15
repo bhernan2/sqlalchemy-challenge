@@ -94,7 +94,8 @@ def stations():
 
     return jsonify(date_tobs)
 
-       
+if __name__ == '__main__':
+    app.run(debug=True)      
 
 
             
