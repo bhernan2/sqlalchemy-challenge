@@ -1,29 +1,35 @@
-import numpy as numpy
+import numpy as np
 import datetime as dt
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, func, and_
+from sqlalchemy import create_engine, func
 
 from flask import Flask, jsonify
 
-#set up database
+#################################################
+#Database setup
+#################################################
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+
+#reflect an existing database into a new model
 Base = automap_base()
+#reflect tables
 Base.prepare(engine, reflect=True)
 
-#save reference to table
+#save reference to the table
 measurement = Base.classes.measurement
 station=Base.classes.station
 
-#create session
-session = Session(engine)
-
-#set up flask
+#################################################
+#Flask setup
+#################################################
 app = Flask(__name__)
 
-#define routes
+#################################################
+#Flask routes
+#################################################
 @app.route("/")
 def welcome():
     """List all available api routes"""
@@ -32,7 +38,15 @@ def welcome():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start>"
+        f"Temperature start date(yyyy-mm-dd): /api/v1.0/<start>"
+        f"Temperature strat to end dates (yyyy-mm-dd): /api/v1.0/<start>/<end>"
 
     )
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+    #create session link from Python to DB
+    session = Session(engine)
+    #query for dates and precipitation 
+    results = session.query(measurement.date, measurement.prcp)
+
 
