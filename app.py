@@ -57,7 +57,20 @@ def precipitation():
     session.close()
 
     return jsonify(precip_dates)
-    
+@app.route("/api/v1.0/stations<br/>")
+def stations():
+    #create session link from Python to DB
+    session = Session(engine)
+    stations = {}
+    #query all stations
+    results = session.query(station.station, station.name).all()
+    for s, name in results: 
+        stations[s] = name
+
+    session.close()
+
+    return jsonify(stations)
+       
 
 
             
