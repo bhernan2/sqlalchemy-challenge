@@ -47,6 +47,19 @@ def precipitation():
     #create session link from Python to DB
     session = Session(engine)
     #query for dates and precipitation 
-    results = session.query(measurement.date, measurement.prcp)
+    results = session.query(measurement.date, measurement.prcp).\
+              order_by(measurement.date).all()
+    #convert to dictionaries to jsonify
+    precip_dates = []
+    for date, prcp in results:
+        new_dict = {}
+        new_dict[date] = prcp
+    session.close()
+
+    return jsonify(precip_dates)
+    
+
+
+            
 
 
